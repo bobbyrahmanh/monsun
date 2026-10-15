@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CalendarDays, CheckCircle2, Clock, ListChecks, Plus } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import StatCard from "@/components/StatCard";
+import StreakCard from "@/components/StreakCard";
 import TaskList from "@/components/TaskList";
 import { useTasks } from "@/hooks/TasksContext";
 import { useNow } from "@/hooks/useNow";
@@ -50,7 +51,8 @@ export default function DashboardPage() {
         <StatCard label="Pending" value={pending} icon={Clock} />
       </section>
 
-      <section className="mt-4 rounded-3xl border border-line bg-white p-5 shadow-card sm:p-6" aria-label="Today's tasks">
+      <div className="mt-4 grid gap-4 lg:grid-cols-3">
+      <section className="rounded-3xl border border-line bg-white p-5 shadow-card sm:p-6 lg:col-span-2" aria-label="Today's tasks">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold">Today&apos;s tasks</h2>
@@ -87,6 +89,9 @@ export default function DashboardPage() {
           />
         )}
       </section>
+
+      <StreakCard />
+      </div>
     </>
   );
 }

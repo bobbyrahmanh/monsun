@@ -12,6 +12,13 @@ export function fromISODate(iso: string): Date {
   return new Date(y, m - 1, d);
 }
 
+// Geser tanggal ISO sebanyak n hari (boleh negatif).
+export function shiftISO(iso: string, days: number): string {
+  const date = fromISODate(iso);
+  date.setDate(date.getDate() + days);
+  return toISODate(date);
+}
+
 export function addDays(days: number): string {
   const date = new Date();
   date.setDate(date.getDate() + days);

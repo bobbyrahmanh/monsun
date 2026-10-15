@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { toISODate } from "@/lib/date";
 import { getSampleTasks } from "@/lib/sampleTasks";
 import type { Task } from "@/lib/types";
 
@@ -52,7 +53,11 @@ export function TasksProvider({ children }: { children: ReactNode }) {
 
   const toggleTask = useCallback((id: string) => {
     setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, status: t.status === "completed" ? "pending" : "completed" } : t)),
+      prev.map((t): Task => {
+        if (t.id !== id) return t;
+        if (t.status === "completed") return { ...t, status: "pending", completedAt: undefined };
+        return { ...t, status: "completed", completedAt: toISODate() };
+      }),
     );
   }, []);
 
