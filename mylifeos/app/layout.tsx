@@ -4,6 +4,8 @@ import { TasksProvider } from "@/hooks/TasksContext";
 import Logo from "@/components/Logo";
 import MobileNav from "@/components/MobileNav";
 import Sidebar from "@/components/Sidebar";
+import { ThemeProvider } from "@/hooks/ThemeContext";
+import { themeInitScript } from "@/lib/theme";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,20 +15,28 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body>
+        <ThemeProvider>
         <TasksProvider>
-          <div className="mx-auto flex min-h-screen max-w-full gap-6 lg:p-6">
+          <div className="flex min-h-screen">
             <Sidebar />
-            <div className="min-w-0 flex-1 px-4 pb-28 pt-5 lg:px-0 lg:pb-0 lg:pt-0">
-              <div className="mb-6 lg:hidden">
-                <Logo />
-              </div>
-              <main>{children}</main>
+            <div className="min-w-0 flex-1 p-3 pb-28 sm:p-5 lg:p-6">
+              {/* Panel kaca besar yang membungkus isi halaman */}
+              <main className="mx-auto max-w-[1400px] rounded-[2rem] border border-edge/60 bg-surface/35 p-4 shadow-glass backdrop-blur-md sm:p-6 lg:min-h-[calc(100vh-3rem)] lg:p-8">
+                <div className="mb-6 lg:hidden">
+                  <Logo />
+                </div>
+                {children}
+              </main>
             </div>
           </div>
           <MobileNav />
         </TasksProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

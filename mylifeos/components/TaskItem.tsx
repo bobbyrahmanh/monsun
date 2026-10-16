@@ -9,12 +9,12 @@ function getDueLabel(task: Task) {
   const today = toISODate();
   const done = task.status === "completed";
 
-  if (task.dueDate === today) return { text: "Today", className: "bg-brand-soft text-brand-dark" };
-  if (task.dueDate === addDays(1)) return { text: "Tomorrow", className: "bg-canvas text-muted" };
   if (task.dueDate < today && !done) {
-    return { text: `Overdue, ${formatShortDate(task.dueDate)}`, className: "bg-red-50 text-red-600" };
+    return { text: `Overdue, ${formatShortDate(task.dueDate)}`, className: "bg-red-500 text-white", overdue: true };
   }
-  return { text: formatShortDate(task.dueDate), className: "bg-canvas text-muted" };
+  if (task.dueDate === today) return { text: "Today", className: "bg-brand-soft text-brand-dark", overdue: false };
+  if (task.dueDate === addDays(1)) return { text: "Tomorrow", className: "bg-canvas text-muted", overdue: false };
+  return { text: formatShortDate(task.dueDate), className: "bg-canvas text-muted", overdue: false };
 }
 
 export default function TaskItem({ task }: { task: Task }) {
@@ -23,14 +23,20 @@ export default function TaskItem({ task }: { task: Task }) {
   const due = getDueLabel(task);
 
   return (
-    <li className="group flex items-center gap-3 rounded-2xl border border-line bg-white px-4 py-3 transition-colors hover:border-brand/60">
+    <li
+      className={`flex items-center gap-3 rounded-2xl border px-4 py-3 transition-colors ${
+        due.overdue
+          ? "border-accent bg-accent-soft/90"
+          : "border-edge/80 bg-surface/70 hover:bg-surface/90"
+      }`}
+    >
       <button
         type="button"
         onClick={() => toggleTask(task.id)}
         aria-label={done ? `Mark "${task.title}" as pending` : `Mark "${task.title}" as completed`}
         aria-pressed={done}
         className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
-          done ? "border-brand bg-brand text-white" : "border-line text-transparent hover:border-brand"
+          done ? "border-brand bg-brand text-white" : "border-ink/25 text-transparent hover:border-brand"
         }`}
       >
         <Check size={14} strokeWidth={3} />
@@ -40,7 +46,7 @@ export default function TaskItem({ task }: { task: Task }) {
         {task.title}
       </span>
 
-      <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium ${due.className}`}>{due.text}</span>
+      <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${due.className}`}>{due.text}</span>
 
       <button
         type="button"

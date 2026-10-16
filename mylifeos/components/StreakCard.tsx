@@ -50,9 +50,9 @@ export default function StreakCard() {
       : "Finish one task to start a new streak.";
 
   return (
-    <section className="rounded-3xl border border-line bg-white p-5 shadow-card sm:p-6" aria-label="Streak">
+    <section className="glass p-5 sm:p-6" aria-label="Streak">
       <div className="flex items-center gap-3">
-        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-soft text-brand-dark">
+        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-ink">
           <Flame size={18} />
         </span>
         <h2 className="text-lg font-semibold">Streak</h2>
@@ -71,12 +71,12 @@ export default function StreakCard() {
               title={`${d.full}${d.done ? ": done" : ""}`}
               className={`flex h-9 w-9 items-center justify-center rounded-full ${
                 d.done
-                  ? "bg-brand text-white"
+                  ? "bg-accent text-ink"
                   : d.isToday
-                    ? "bg-canvas text-muted ring-2 ring-brand/60"
+                    ? "bg-surface/70 text-muted ring-2 ring-ink/70"
                     : d.isFuture
-                      ? "bg-canvas text-line"
-                      : "bg-canvas text-muted/60"
+                      ? "bg-surface/30 text-muted/30"
+                      : "bg-surface/60 text-muted/60"
               }`}
             >
               <Flame size={16} fill={d.done ? "currentColor" : "none"} />
@@ -89,7 +89,7 @@ export default function StreakCard() {
         ))}
       </ol>
 
-      <dl className="mt-5 space-y-3 border-t border-line pt-4 text-sm">
+      <dl className="mt-5 space-y-3 border-t border-edge/70 pt-4 text-sm">
         <div className="flex items-center justify-between">
           <dt className="flex items-center gap-2 text-muted">
             <Trophy size={16} /> Best streak

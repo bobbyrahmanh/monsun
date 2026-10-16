@@ -1,26 +1,38 @@
 import type { Config } from "tailwindcss";
 
-// Palet warna ada di sini: ubah sekali, seluruh aplikasi ikut berubah.
+// Warna tidak ditulis langsung di sini, tapi dibaca dari variabel CSS (lihat app/globals.css).
+// Jadi satu komponen otomatis berganti warna ketika tema berganti, dan modifier
+// seperti bg-accent/50 tetap berfungsi berkat <alpha-value>.
+const rgb = (name: string) => `rgb(var(--${name}) / <alpha-value>)`;
+
 const config: Config = {
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
   theme: {
     extend: {
       colors: {
-        canvas: "#eff0f0",
-        ink: "#16181a",
-        muted: "#757b80",
-        line: "#e4e6e7",
+        ink: rgb("ink"), // teks utama
+        "on-ink": rgb("on-ink"), // teks di atas latar "ink"
+        muted: rgb("muted"), // teks sekunder
+        surface: rgb("surface"), // warna dasar kartu kaca
+        edge: rgb("edge"), // tepi kartu kaca
+        canvas: "var(--canvas)", // isi halus (input, chip netral)
+        line: "var(--line)", // garis pemisah
+        accent: {
+          DEFAULT: rgb("accent"), // tombol utama
+          soft: rgb("accent-soft"),
+          dark: rgb("accent-dark"), // saat di-hover
+        },
         brand: {
-          DEFAULT: "#1fcf8e",
-          dark: "#12a371",
-          soft: "#e2f8ef",
+          DEFAULT: rgb("brand"), // hijau: progres & selesai
+          dark: rgb("brand-dark"),
+          soft: rgb("brand-soft"),
         },
       },
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"],
       },
       boxShadow: {
-        card: "0 1px 2px rgba(22,24,26,0.04), 0 4px 16px rgba(22,24,26,0.04)",
+        glass: "var(--glass-shadow)",
       },
     },
   },

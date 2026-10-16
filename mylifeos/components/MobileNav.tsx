@@ -10,7 +10,7 @@ export default function MobileNav() {
   return (
     <nav
       aria-label="Main"
-      className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-4 border-t border-line bg-white/95 px-2 pb-[env(safe-area-inset-bottom)] pt-2 backdrop-blur lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-4 border-t border-edge/70 bg-surface/70 px-2 pb-[env(safe-area-inset-bottom)] pt-2 backdrop-blur-xl lg:hidden"
     >
       {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
         const active = isActive(pathname, href);
@@ -23,7 +23,7 @@ export default function MobileNav() {
               active ? "text-ink" : "text-muted"
             }`}
           >
-            <span className={`rounded-full px-4 py-1.5 transition-colors ${active ? "bg-ink text-white" : ""}`}>
+            <span className={`rounded-full px-4 py-1.5 transition-colors ${active ? "bg-accent text-ink" : ""}`}>
               <Icon size={18} />
             </span>
             {label}

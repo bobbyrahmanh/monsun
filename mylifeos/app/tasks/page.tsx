@@ -34,11 +34,11 @@ export default function TasksPage() {
     <>
       <PageHeader title="Tasks" subtitle={`${tasks.length} in total`} />
 
-      <section className="rounded-3xl border border-line bg-white p-5 shadow-card sm:p-6">
+      <section className="glass p-5 sm:p-6">
         <TaskForm />
       </section>
 
-      <section className="mt-4 rounded-3xl border border-line bg-white p-5 shadow-card sm:p-6">
+      <section className="mt-4 glass p-5 sm:p-6">
         <div className="mb-5 flex gap-2" role="tablist" aria-label="Filter tasks">
           {FILTERS.map(({ value, label }) => (
             <button
@@ -48,7 +48,7 @@ export default function TasksPage() {
               aria-selected={filter === value}
               onClick={() => setFilter(value)}
               className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-                filter === value ? "bg-ink text-white" : "bg-canvas text-muted hover:text-ink"
+                filter === value ? "bg-ink text-on-ink" : "bg-surface/60 text-muted hover:bg-surface hover:text-ink"
               }`}
             >
               {label}
