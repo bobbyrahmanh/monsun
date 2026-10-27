@@ -70,8 +70,8 @@ export default function CalendarPage() {
     <>
       <PageHeader title="Calendar" subtitle="See what's due and plan ahead" />
 
-      <div className="grid gap-4 lg:grid-cols-3">
-        <section className="glass p-4 sm:p-6 lg:col-span-2" aria-label="Month view">
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_24rem]">
+        <section className="glass p-4 sm:p-6" aria-label="Month view">
           <div className="mb-4 flex items-center justify-between gap-3">
             <h2 className="text-xl font-semibold" aria-live="polite">
               {view ? formatMonthTitle(view.year, view.month) : "\u00A0"}
@@ -114,7 +114,7 @@ export default function CalendarPage() {
               </p>
 
               <div className="mb-4">
-                <TaskForm date={selectedISO} />
+                <TaskForm date={selectedISO} stacked />
               </div>
               <TaskList tasks={dayTasks} empty="No tasks on this day. Add one above." />
             </>
