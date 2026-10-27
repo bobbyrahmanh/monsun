@@ -14,6 +14,7 @@ interface TasksContextValue {
   toggleTask: (id: string) => void;
   deleteTask: (id: string) => void;
   resetTasks: () => void;
+  replaceTasks: (tasks: Task[]) => void;
 }
 
 const TasksContext = createContext<TasksContextValue | null>(null);
@@ -67,9 +68,11 @@ export function TasksProvider({ children }: { children: ReactNode }) {
 
   const resetTasks = useCallback(() => setTasks(getSampleTasks()), []);
 
+  const replaceTasks = useCallback((next: Task[]) => setTasks(next), []);
+
   const value = useMemo(
-    () => ({ tasks, ready, addTask, toggleTask, deleteTask, resetTasks }),
-    [tasks, ready, addTask, toggleTask, deleteTask, resetTasks],
+    () => ({ tasks, ready, addTask, toggleTask, deleteTask, resetTasks, replaceTasks }),
+    [tasks, ready, addTask, toggleTask, deleteTask, resetTasks, replaceTasks],
   );
 
   return <TasksContext.Provider value={value}>{children}</TasksContext.Provider>;

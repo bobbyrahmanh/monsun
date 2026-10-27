@@ -24,6 +24,7 @@
   --brand: 34 197 94;
   --brand-dark: 21 128 61;
   --brand-soft: 220 247 229;
+  --danger: 185 28 28;
   --glass-shadow: 0 8px 32px rgba(40, 100, 160, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.7);
   --sky:
     radial-gradient(60% 45% at 62% 40%, rgba(255, 248, 190, 0.85) 0%, rgba(255, 248, 190, 0) 70%),
@@ -49,6 +50,7 @@
   --brand: 38 180 100;
   --brand-dark: 134 239 172;
   --brand-soft: 24 74 56;
+  --danger: 252 165 165;
   --glass-shadow: 0 8px 32px rgba(0, 0, 12, 0.5), inset 0 1px 0 rgba(170, 180, 255, 0.14);
   --sky:
     radial-gradient(1.5px 1.5px at 14% 18%, rgba(255, 255, 255, 0.9), transparent),
@@ -79,6 +81,7 @@
   --brand: 22 163 74;
   --brand-dark: 21 110 55;
   --brand-soft: 214 244 224;
+  --danger: 185 28 28;
   --glass-shadow: 0 8px 32px rgba(120, 40, 60, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.6);
   --sky:
     radial-gradient(70% 45% at 50% 108%, rgba(255, 214, 130, 0.9) 0%, rgba(255, 214, 130, 0) 70%),

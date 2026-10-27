@@ -15,6 +15,7 @@ const config: Config = {
         muted: rgb("muted"), // teks sekunder
         surface: rgb("surface"), // warna dasar kartu kaca
         edge: rgb("edge"), // tepi kartu kaca
+        danger: rgb("danger"), // aksi berbahaya / pesan error
         canvas: "var(--canvas)", // isi halus (input, chip netral)
         line: "var(--line)", // garis pemisah
         accent: {

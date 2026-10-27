@@ -7,6 +7,7 @@ import PageHeader from "@/components/PageHeader";
 import StatCard from "@/components/StatCard";
 import StreakCard from "@/components/StreakCard";
 import TaskList from "@/components/TaskList";
+import { useSettings } from "@/hooks/SettingsContext";
 import { useTasks } from "@/hooks/TasksContext";
 import { useNow } from "@/hooks/useNow";
 import { formatLongDate, getGreeting, toISODate } from "@/lib/date";
@@ -24,6 +25,8 @@ function Chip({ tone, children }: { tone: "neutral" | "good" | "bad"; children: 
 export default function DashboardPage() {
   const { tasks, ready } = useTasks();
   const now = useNow();
+  const { settings } = useSettings();
+  const name = settings.name.trim();
   const loaded = ready && now !== null;
 
   const total = tasks.length;
@@ -42,7 +45,7 @@ export default function DashboardPage() {
     <>
       <PageHeader
         title="My Day"
-        subtitle={now ? formatLongDate(now) : "\u00A0"}
+        subtitle={now ? (name ? `${getGreeting(now)}, ${name}! ${formatLongDate(now)}` : formatLongDate(now)) : "\u00A0"}
         action={
           <Link
             href="/tasks"
