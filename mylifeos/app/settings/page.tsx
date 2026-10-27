@@ -82,7 +82,7 @@ export default function SettingsPage() {
 
   return (
     <>
-      <PageHeader title="Settings" subtitle="Make MyLifeOS feel like yours" />
+      <PageHeader title="Settings" subtitle="Make Monsun feel like yours" />
 
       <div className="flex max-w-3xl flex-col gap-4">
         <SettingsSection icon={UserRound} title="Profile" description="Used for the greeting on your dashboard.">
@@ -132,7 +132,7 @@ export default function SettingsPage() {
               <Download size={16} /> Export
             </button>
           </Row>
-          <Row title="Import tasks" description="Restore from a MyLifeOS backup. Replaces your current tasks.">
+          <Row title="Import tasks" description="Restore from a Monsun backup. Replaces your current tasks.">
             <button type="button" onClick={() => fileInput.current?.click()} className={secondaryButton}>
               <Upload size={16} /> Import
             </button>

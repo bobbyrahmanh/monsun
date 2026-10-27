@@ -10,7 +10,7 @@ import { themeInitScript } from "@/lib/theme";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "MyLifeOS",
+  title: "Monsun",
   description: "A simple personal productivity dashboard.",
 };
 
