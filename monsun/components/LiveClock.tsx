@@ -1,6 +1,5 @@
 "use client";
 
-import { Clock as ClockIcon } from "lucide-react";
 import { useSettings } from "@/hooks/SettingsContext";
 import { useClock } from "@/hooks/useClock";
 import { formatClock } from "@/lib/clock";
@@ -14,14 +13,14 @@ export default function LiveClock() {
 
   return (
     <div
-      className="flex h-10 items-center gap-2 rounded-full border border-edge/80 bg-surface/70 px-4 text-sm font-medium tabular-nums"
+      className="flex h-10 items-center text-2xl font-semibold tabular-nums tracking-tight"
       title={now ? formatLongDate(now) : undefined}
     >
-      <ClockIcon size={16} aria-hidden="true" className="text-muted" />
       <span className="sr-only">Current time:</span>
       {/* Placeholder selebar jam sungguhan, supaya tata letak tidak bergeser saat jam muncul */}
       <time dateTime={now ? now.toISOString() : undefined}>{parts ? parts.time : settings.showSeconds ? "--:--:--" : "--:--"}</time>
-      {parts?.suffix && <span className="text-xs text-muted">{parts.suffix}</span>}
+      {/* AM/PM tidak ditampilkan, tapi tetap dibacakan pembaca layar supaya waktunya tidak ambigu */}
+      {parts?.suffix && <span className="sr-only">{parts.suffix}</span>}
     </div>
   );
 }
