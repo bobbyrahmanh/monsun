@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef, useState, type ChangeEvent, type ReactNode } from "react";
-import { CalendarCog, Database, Download, RotateCcw, Trash2, Upload, UserRound } from "lucide-react";
+import { CalendarCog, Clock, Database, Download, RotateCcw, Trash2, Upload, UserRound } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
+import SegmentedControl from "@/components/SegmentedControl";
 import SettingsSection from "@/components/SettingsSection";
 import { useSettings } from "@/hooks/SettingsContext";
 import { useTasks } from "@/hooks/TasksContext";
@@ -82,7 +83,7 @@ export default function SettingsPage() {
 
   return (
     <>
-      <PageHeader title="Settings" subtitle="Make Monsun feel like yours" />
+      <PageHeader title="Settings" subtitle="Make MyLifeOS feel like yours" />
 
       <div className="flex max-w-3xl flex-col gap-4">
         <SettingsSection icon={UserRound} title="Profile" description="Used for the greeting on your dashboard.">
@@ -102,27 +103,34 @@ export default function SettingsPage() {
         </SettingsSection>
 
         <SettingsSection icon={CalendarCog} title="Calendar" description="Applies to the calendar and your weekly streak.">
-          <p id="week-start-label" className="mb-2 text-sm font-medium">
-            Week starts on
-          </p>
-          <div role="radiogroup" aria-labelledby="week-start-label" className="flex gap-2">
-            {WEEK_OPTIONS.map(({ value, label }) => {
-              const active = settings.weekStart === value;
-              return (
-                <button
-                  key={value}
-                  type="button"
-                  role="radio"
-                  aria-checked={active}
-                  onClick={() => updateSettings({ weekStart: value })}
-                  className={`rounded-full px-5 py-2 text-sm font-medium transition-colors ${
-                    active ? "bg-ink text-on-ink" : "bg-surface/60 text-muted hover:bg-surface hover:text-ink"
-                  }`}
-                >
-                  {label}
-                </button>
-              );
-            })}
+          <SegmentedControl
+            label="Week starts on"
+            options={WEEK_OPTIONS}
+            value={settings.weekStart}
+            onChange={(weekStart) => updateSettings({ weekStart })}
+          />
+        </SettingsSection>
+
+        <SettingsSection icon={Clock} title="Clock" description="The live clock at the top right of every page.">
+          <div className="flex flex-col gap-5">
+            <SegmentedControl
+              label="Time format"
+              options={[
+                { value: false, label: "24-hour" },
+                { value: true, label: "12-hour" },
+              ]}
+              value={settings.hour12}
+              onChange={(hour12) => updateSettings({ hour12 })}
+            />
+            <SegmentedControl
+              label="Seconds"
+              options={[
+                { value: true, label: "Show" },
+                { value: false, label: "Hide" },
+              ]}
+              value={settings.showSeconds}
+              onChange={(showSeconds) => updateSettings({ showSeconds })}
+            />
           </div>
         </SettingsSection>
 
@@ -132,7 +140,7 @@ export default function SettingsPage() {
               <Download size={16} /> Export
             </button>
           </Row>
-          <Row title="Import tasks" description="Restore from a Monsun backup. Replaces your current tasks.">
+          <Row title="Import tasks" description="Restore from a MyLifeOS backup. Replaces your current tasks.">
             <button type="button" onClick={() => fileInput.current?.click()} className={secondaryButton}>
               <Upload size={16} /> Import
             </button>

@@ -8,6 +8,8 @@ export interface Settings {
   focusMinutes: number; // lama sesi fokus
   shortBreakMinutes: number;
   longBreakMinutes: number;
+  showSeconds: boolean; // jam di pojok kanan atas
+  hour12: boolean; // false = format 24 jam
 }
 
 // Nama field pengaturan untuk lama tiap mode timer.
@@ -25,6 +27,8 @@ export const DEFAULT_SETTINGS: Settings = {
   focusMinutes: TIMER_DEFAULTS.focus,
   shortBreakMinutes: TIMER_DEFAULTS.short,
   longBreakMinutes: TIMER_DEFAULTS.long,
+  showSeconds: true,
+  hour12: false,
 };
 
 // Data dari localStorage tidak boleh dipercaya begitu saja: validasi dan isi dengan nilai bawaan.
@@ -36,5 +40,7 @@ export function parseSettings(raw: unknown): Settings {
     focusMinutes: normalizeMinutes("focus", r.focusMinutes),
     shortBreakMinutes: normalizeMinutes("short", r.shortBreakMinutes),
     longBreakMinutes: normalizeMinutes("long", r.longBreakMinutes),
+    showSeconds: typeof r.showSeconds === "boolean" ? r.showSeconds : DEFAULT_SETTINGS.showSeconds,
+    hour12: typeof r.hour12 === "boolean" ? r.hour12 : DEFAULT_SETTINGS.hour12,
   };
 }

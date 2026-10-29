@@ -10,6 +10,7 @@ import { useSettings } from "@/hooks/SettingsContext";
 import { useTasks } from "@/hooks/TasksContext";
 import { useNow } from "@/hooks/useNow";
 import { formatMonthTitle } from "@/lib/calendar";
+import { compareTasks } from "@/lib/taskFilter";
 import { formatLongDate, fromISODate, toISODate } from "@/lib/date";
 import type { Task } from "@/lib/types";
 
@@ -37,9 +38,7 @@ export default function CalendarPage() {
       if (list) list.push(task);
       else map.set(task.dueDate, [task]);
     }
-    for (const list of map.values()) {
-      list.sort((a, b) => (a.status === b.status ? 0 : a.status === "pending" ? -1 : 1));
-    }
+    for (const list of map.values()) list.sort(compareTasks);
     return map;
   }, [tasks]);
 

@@ -1,4 +1,5 @@
 import { fromISODate, toISODate } from "./date";
+import { isPriority, isRepeat } from "./taskMeta";
 import type { Task } from "./types";
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
@@ -22,6 +23,9 @@ function toTask(item: unknown): Task | null {
 
   const task: Task = { id: r.id, title: r.title.trim().slice(0, 120), dueDate: r.dueDate, status: r.status };
   if (r.status === "completed" && isRealDate(r.completedAt)) task.completedAt = r.completedAt;
+  if (isPriority(r.priority) && r.priority !== "normal") task.priority = r.priority;
+  if (isRepeat(r.repeat)) task.repeat = r.repeat;
+  if (typeof r.spawnedId === "string" && r.spawnedId) task.spawnedId = r.spawnedId;
   return task;
 }
 

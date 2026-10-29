@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import LiveClock from "./LiveClock";
 import ThemeMenu from "./ThemeMenu";
 
 interface PageHeaderProps {
@@ -16,6 +17,7 @@ export default function PageHeader({ title, subtitle, action }: PageHeaderProps)
         {subtitle && <p className="mt-1 text-sm text-muted">{subtitle}</p>}
       </div>
       <div className="flex items-center gap-3">
+        <LiveClock />
         <ThemeMenu />
         {action}
       </div>
