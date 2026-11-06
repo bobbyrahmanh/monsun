@@ -8,6 +8,7 @@ export interface Task {
   dueDate: string; // format YYYY-MM-DD
   status: TaskStatus;
   completedAt?: string; // YYYY-MM-DD, diisi saat tugas dicentang selesai
+  dueTime?: string; // "HH:mm" (24 jam). Kosong = tugas berlaku sepanjang hari
   priority?: Priority; // kosong = normal
   repeat?: Repeat; // kosong = tidak berulang
   spawnedId?: string; // id tugas lanjutan yang dibuat otomatis saat tugas berulang ini selesai

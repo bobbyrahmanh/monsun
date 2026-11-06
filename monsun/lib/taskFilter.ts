@@ -10,12 +10,16 @@ export interface TaskFilter {
   priority: PriorityFilter;
 }
 
-// Urutan standar: belum selesai dulu, lalu tanggal terdekat, lalu prioritas tertinggi.
+// Urutan standar: belum selesai dulu, lalu tanggal terdekat, lalu jam tenggat terdekat
+// (tugas tanpa jam dianggap tenggatnya akhir hari, jadi di belakang yang berjam), lalu prioritas.
 // Sengaja TANPA pembanding judul: sort bersifat stabil, jadi tugas yang sama-sama
 // setara tetap tampil dengan yang terbaru di atas.
 export function compareTasks(a: Task, b: Task): number {
   if (a.status !== b.status) return a.status === "pending" ? -1 : 1;
   if (a.dueDate !== b.dueDate) return a.dueDate < b.dueDate ? -1 : 1;
+  const timeA = a.dueTime ?? "24:00"; // "24:00" lebih besar dari semua jam valid
+  const timeB = b.dueTime ?? "24:00";
+  if (timeA !== timeB) return timeA < timeB ? -1 : 1;
   return PRIORITY_WEIGHT[priorityOf(b)] - PRIORITY_WEIGHT[priorityOf(a)];
 }
 
