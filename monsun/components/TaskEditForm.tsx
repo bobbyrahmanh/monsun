@@ -5,6 +5,7 @@ import { useTasks } from "@/hooks/TasksContext";
 import { PRIORITIES, PRIORITY_LABEL, REPEATS, REPEAT_LABEL, priorityOf } from "@/lib/taskMeta";
 import type { Priority, Repeat, Task } from "@/lib/types";
 import { inputClass, selectClass } from "./fieldStyles";
+import TimeInput from "./TimeInput";
 
 interface TaskEditFormProps {
   task: Task;
@@ -15,6 +16,7 @@ export default function TaskEditForm({ task, onDone }: TaskEditFormProps) {
   const { updateTask } = useTasks();
   const [title, setTitle] = useState(task.title);
   const [dueDate, setDueDate] = useState(task.dueDate);
+  const [time, setTime] = useState(task.dueTime ?? "");
   const [priority, setPriority] = useState<Priority>(priorityOf(task));
   const [repeat, setRepeat] = useState<Repeat | "">(task.repeat ?? "");
 
@@ -23,7 +25,7 @@ export default function TaskEditForm({ task, onDone }: TaskEditFormProps) {
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!canSave) return;
-    updateTask(task.id, { title, dueDate, priority, repeat: repeat || undefined });
+    updateTask(task.id, { title, dueDate, dueTime: time || undefined, priority, repeat: repeat || undefined });
     onDone();
   }
 
@@ -55,6 +57,7 @@ export default function TaskEditForm({ task, onDone }: TaskEditFormProps) {
           aria-label="Due date"
           className={selectClass}
         />
+        <TimeInput value={time} onChange={setTime} />
         <label className="flex items-center gap-2 text-xs text-muted">
           Priority
           <select value={priority} onChange={(e) => setPriority(e.target.value as Priority)} className={selectClass}>

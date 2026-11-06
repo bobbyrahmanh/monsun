@@ -2,29 +2,44 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Check, Pencil, Repeat as RepeatIcon, Trash2 } from "lucide-react";
+import { useSettings } from "@/hooks/SettingsContext";
 import { useTasks } from "@/hooks/TasksContext";
-import { addDays, formatShortDate, toISODate } from "@/lib/date";
+import { useMinuteNow } from "@/hooks/useMinuteNow";
+import { formatTimeOfDay } from "@/lib/clock";
+import { formatShortDate, shiftISO, toISODate } from "@/lib/date";
+import { isOverdue } from "@/lib/deadline";
 import { REPEAT_LABEL, priorityOf } from "@/lib/taskMeta";
 import type { Task } from "@/lib/types";
 import PriorityBadge from "./PriorityBadge";
 import TaskEditForm from "./TaskEditForm";
 
-function getDueLabel(task: Task) {
-  const today = toISODate();
-  const done = task.status === "completed";
+// Teks + warna label tenggat. Contoh: "Today, 14:30", "Tomorrow", "Oct 31, 09:00",
+// "Overdue, 09:00" (hari ini, jam sudah lewat), "Overdue, Oct 25 09:00" (tanggal sudah lewat).
+function getDueLabel(task: Task, now: Date, hour12: boolean) {
+  const today = toISODate(now);
+  const time = task.dueTime ? formatTimeOfDay(task.dueTime, hour12) : "";
 
-  if (task.dueDate < today && !done) {
-    return { text: `Overdue, ${formatShortDate(task.dueDate)}`, className: "bg-red-500 text-white", overdue: true };
+  if (isOverdue(task, now)) {
+    const when = task.dueDate === today ? time : `${formatShortDate(task.dueDate)}${time ? ` ${time}` : ""}`;
+    return { text: `Overdue, ${when}`, className: "bg-red-500 text-white", overdue: true };
   }
-  if (task.dueDate === today) return { text: "Today", className: "bg-brand-soft text-brand-dark", overdue: false };
-  if (task.dueDate === addDays(1)) return { text: "Tomorrow", className: "bg-canvas text-muted", overdue: false };
-  return { text: formatShortDate(task.dueDate), className: "bg-canvas text-muted", overdue: false };
+
+  const day =
+    task.dueDate === today ? "Today" : task.dueDate === shiftISO(today, 1) ? "Tomorrow" : formatShortDate(task.dueDate);
+  return {
+    text: time ? `${day}, ${time}` : day,
+    className: task.dueDate === today ? "bg-brand-soft text-brand-dark" : "bg-canvas text-muted",
+    overdue: false,
+  };
 }
 
 const iconButton = "shrink-0 rounded-full p-2 text-muted transition-colors";
 
 export default function TaskItem({ task }: { task: Task }) {
   const { toggleTask, deleteTask } = useTasks();
+  const { settings } = useSettings();
+  // Berdetak tiap menit (satu timer bersama), jadi label "Overdue" muncul sendiri saat jamnya lewat.
+  const minuteNow = useMinuteNow();
   const [editing, setEditing] = useState(false);
   const editButton = useRef<HTMLButtonElement>(null);
   const wasEditing = useRef(false);
@@ -36,7 +51,7 @@ export default function TaskItem({ task }: { task: Task }) {
   }, [editing]);
 
   const done = task.status === "completed";
-  const due = getDueLabel(task);
+  const due = getDueLabel(task, new Date(minuteNow || Date.now()), settings.hour12);
 
   if (editing) {
     return (

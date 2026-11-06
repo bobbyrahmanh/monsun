@@ -2,7 +2,10 @@
 
 import { useMemo } from "react";
 import { buildMonthGrid, getWeekdays } from "@/lib/calendar";
+import { useMinuteNow } from "@/hooks/useMinuteNow";
+import { formatTimeOfDay } from "@/lib/clock";
 import { formatLongDate, fromISODate } from "@/lib/date";
+import { isOverdue } from "@/lib/deadline";
 import type { WeekStart } from "@/lib/settings";
 import type { Task } from "@/lib/types";
 
@@ -10,6 +13,7 @@ interface CalendarGridProps {
   year: number;
   month: number; // 0-11
   weekStart: WeekStart;
+  hour12: boolean; // format jam pada chip (mengikuti Settings)
   todayISO: string | null;
   selectedISO: string | null;
   tasksByDate: Map<string, Task[]>; // sudah terurut: pending dulu
@@ -18,9 +22,9 @@ interface CalendarGridProps {
 
 type Tone = "done" | "overdue" | "pending";
 
-function toneOf(task: Task, todayISO: string | null): Tone {
+function toneOf(task: Task, now: Date): Tone {
   if (task.status === "completed") return "done";
-  return todayISO && task.dueDate < todayISO ? "overdue" : "pending";
+  return isOverdue(task, now) ? "overdue" : "pending";
 }
 
 const DOT: Record<Tone, string> = {
@@ -45,6 +49,7 @@ export default function CalendarGrid({
   year,
   month,
   weekStart,
+  hour12,
   todayISO,
   selectedISO,
   tasksByDate,
@@ -52,6 +57,7 @@ export default function CalendarGrid({
 }: CalendarGridProps) {
   const cells = useMemo(() => buildMonthGrid(year, month, weekStart), [year, month, weekStart]);
   const weekdays = getWeekdays(weekStart);
+  const now = new Date(useMinuteNow() || Date.now());
 
   return (
     <div>
@@ -92,7 +98,7 @@ export default function CalendarGrid({
               {/* HP: titik kecil per tugas */}
               <span className="flex gap-1 sm:hidden" aria-hidden>
                 {dayTasks.slice(0, 3).map((t) => (
-                  <span key={t.id} className={`h-1.5 w-1.5 rounded-full ${DOT[toneOf(t, todayISO)]}`} />
+                  <span key={t.id} className={`h-1.5 w-1.5 rounded-full ${DOT[toneOf(t, now)]}`} />
                 ))}
               </span>
 
@@ -101,9 +107,9 @@ export default function CalendarGrid({
                 {chips.map((t) => (
                   <span
                     key={t.id}
-                    className={`truncate rounded-md px-1.5 py-0.5 text-[11px] font-medium leading-tight ${CHIP[toneOf(t, todayISO)]}`}
+                    className={`truncate rounded-md px-1.5 py-0.5 text-[11px] font-medium leading-tight ${CHIP[toneOf(t, now)]}`}
                   >
-                    {t.title}
+                    {t.dueTime ? `${formatTimeOfDay(t.dueTime, hour12)} ${t.title}` : t.title}
                   </span>
                 ))}
                 {extra > 0 && <span className="px-1 text-[11px] font-medium text-muted">+{extra} more</span>}
