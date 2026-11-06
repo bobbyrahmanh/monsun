@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { toISODate } from "@/lib/date";
+import { normalizeTime } from "@/lib/deadline";
 import { nextDueDate } from "@/lib/recurrence";
 import { getSampleTasks } from "@/lib/sampleTasks";
 import { normalizePriority } from "@/lib/taskMeta";
@@ -12,12 +13,13 @@ const STORAGE_KEY = "mylifeos.tasks";
 export interface NewTask {
   title: string;
   dueDate: string;
+  dueTime?: string; // "HH:mm", kosong = sepanjang hari
   priority?: Priority;
   repeat?: Repeat;
 }
 
 // Field yang boleh diubah lewat edit. "repeat: undefined" berarti "jangan berulang lagi".
-export type TaskPatch = Partial<Pick<Task, "title" | "dueDate" | "priority" | "repeat">>;
+export type TaskPatch = Partial<Pick<Task, "title" | "dueDate" | "dueTime" | "priority" | "repeat">>;
 
 export interface DeletedTask {
   task: Task;
@@ -70,11 +72,19 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     }
   }, [tasks, ready]);
 
-  const addTask = useCallback(({ title, dueDate, priority, repeat }: NewTask) => {
+  const addTask = useCallback(({ title, dueDate, dueTime, priority, repeat }: NewTask) => {
     const clean = title.trim().slice(0, 120);
     if (!clean) return;
     setTasks((prev) => [
-      { id: createId(), title: clean, dueDate, status: "pending", priority: normalizePriority(priority), repeat },
+      {
+        id: createId(),
+        title: clean,
+        dueDate,
+        dueTime: normalizeTime(dueTime),
+        status: "pending",
+        priority: normalizePriority(priority),
+        repeat,
+      },
       ...prev,
     ]);
   }, []);
@@ -90,6 +100,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
           next.title = title;
         }
         if (patch.dueDate !== undefined) next.dueDate = patch.dueDate;
+        if ("dueTime" in patch) next.dueTime = normalizeTime(patch.dueTime);
         if ("priority" in patch) next.priority = normalizePriority(patch.priority);
         if ("repeat" in patch) next.repeat = patch.repeat;
         return next;
@@ -120,6 +131,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
           title: target.title,
           dueDate: nextDueDate(target.dueDate, target.repeat, today),
           status: "pending",
+          dueTime: target.dueTime, // tugas berulang tetap jatuh di jam yang sama
           priority: target.priority,
           repeat: target.repeat,
         };
