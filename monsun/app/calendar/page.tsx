@@ -93,6 +93,7 @@ export default function CalendarPage() {
               year={view.year}
               month={view.month}
               weekStart={settings.weekStart}
+              hour12={settings.hour12}
               todayISO={todayISO}
               selectedISO={selectedISO}
               tasksByDate={tasksByDate}
