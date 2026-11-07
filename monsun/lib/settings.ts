@@ -1,6 +1,7 @@
 import { TIMER_DEFAULTS, normalizeMinutes } from "./timer";
 
 export type WeekStart = 0 | 1; // 0 = Minggu, 1 = Senin (sama dengan Date.getDay())
+export type CalendarView = "month" | "week";
 
 export interface Settings {
   name: string;
@@ -10,6 +11,7 @@ export interface Settings {
   longBreakMinutes: number;
   showSeconds: boolean; // jam di pojok kanan atas
   hour12: boolean; // false = format 24 jam
+  calendarView: CalendarView; // tampilan terakhir yang dipilih di halaman Calendar
 }
 
 // Nama field pengaturan untuk lama tiap mode timer.
@@ -29,6 +31,7 @@ export const DEFAULT_SETTINGS: Settings = {
   longBreakMinutes: TIMER_DEFAULTS.long,
   showSeconds: true,
   hour12: false,
+  calendarView: "month",
 };
 
 // Data dari localStorage tidak boleh dipercaya begitu saja: validasi dan isi dengan nilai bawaan.
@@ -42,5 +45,6 @@ export function parseSettings(raw: unknown): Settings {
     longBreakMinutes: normalizeMinutes("long", r.longBreakMinutes),
     showSeconds: typeof r.showSeconds === "boolean" ? r.showSeconds : DEFAULT_SETTINGS.showSeconds,
     hour12: typeof r.hour12 === "boolean" ? r.hour12 : DEFAULT_SETTINGS.hour12,
+    calendarView: r.calendarView === "week" ? "week" : "month",
   };
 }

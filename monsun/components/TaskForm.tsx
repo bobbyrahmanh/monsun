@@ -10,15 +10,16 @@ import { inputClass, selectClass } from "./fieldStyles";
 import TimeInput from "./TimeInput";
 
 interface TaskFormProps {
+  defaultTime?: string; // jam awal (mis. dari klik sel jam di tampilan minggu); form juga langsung fokus
   date?: string; // kalau diisi (mis. dari Calendar), tanggal dikunci dan input tanggal disembunyikan
   stacked?: boolean; // true = susun ke bawah, untuk wadah sempit seperti panel di Calendar
 }
 
-export default function TaskForm({ date, stacked = false }: TaskFormProps) {
+export default function TaskForm({ date, defaultTime, stacked = false }: TaskFormProps) {
   const { addTask } = useTasks();
   const [title, setTitle] = useState("");
   const [dueDate, setDueDate] = useState(""); // kosong = pakai hari ini saat submit
-  const [time, setTime] = useState(""); // kosong = tanpa jam (sepanjang hari)
+  const [time, setTime] = useState(defaultTime ?? ""); // kosong = tanpa jam (sepanjang hari)
   const [priority, setPriority] = useState<Priority>("normal");
   const [repeat, setRepeat] = useState<Repeat | "">("");
 
@@ -43,6 +44,7 @@ export default function TaskForm({ date, stacked = false }: TaskFormProps) {
     <form onSubmit={handleSubmit} className={`flex flex-col gap-3 ${stacked ? "" : "sm:flex-row sm:flex-wrap"}`}>
       <input
         type="text"
+        autoFocus={defaultTime !== undefined}
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="What needs to get done?"

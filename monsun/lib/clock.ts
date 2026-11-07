@@ -13,6 +13,12 @@ export function formatTimeOfDay(hhmm: string, hour12: boolean): string {
   return `${h % 12 === 0 ? 12 : h % 12}:${pad(m)} ${h < 12 ? "AM" : "PM"}`;
 }
 
+// Label sumbu waktu di tampilan minggu: "09:00" (24 jam) atau "9 AM" (12 jam).
+export function formatHourLabel(hour: number, hour12: boolean): string {
+  if (!hour12) return `${pad(hour)}:00`;
+  return `${hour % 12 === 0 ? 12 : hour % 12} ${hour < 12 ? "AM" : "PM"}`;
+}
+
 // Format manual (bukan Intl) supaya tengah malam selalu "00:05", bukan "24:05" seperti
 // yang dihasilkan sebagian browser untuk hour12:false.
 export function formatClock(date: Date, { hour12, seconds }: ClockOptions): { time: string; suffix: string } {

@@ -5,9 +5,9 @@ import { buildMonthGrid, getWeekdays } from "@/lib/calendar";
 import { useMinuteNow } from "@/hooks/useMinuteNow";
 import { formatTimeOfDay } from "@/lib/clock";
 import { formatLongDate, fromISODate } from "@/lib/date";
-import { isOverdue } from "@/lib/deadline";
 import type { WeekStart } from "@/lib/settings";
 import type { Task } from "@/lib/types";
+import { CHIP, DOT, toneOf } from "./taskTone";
 
 interface CalendarGridProps {
   year: number;
@@ -19,25 +19,6 @@ interface CalendarGridProps {
   tasksByDate: Map<string, Task[]>; // sudah terurut: pending dulu
   onSelect: (iso: string) => void;
 }
-
-type Tone = "done" | "overdue" | "pending";
-
-function toneOf(task: Task, now: Date): Tone {
-  if (task.status === "completed") return "done";
-  return isOverdue(task, now) ? "overdue" : "pending";
-}
-
-const DOT: Record<Tone, string> = {
-  done: "bg-brand",
-  overdue: "bg-red-600",
-  pending: "bg-accent ring-1 ring-ink/25",
-};
-
-const CHIP: Record<Tone, string> = {
-  done: "bg-brand-soft text-brand-dark line-through",
-  overdue: "bg-red-600 text-white",
-  pending: "bg-accent text-ink",
-};
 
 function summarize(tasks: Task[]): string {
   if (tasks.length === 0) return "no tasks";

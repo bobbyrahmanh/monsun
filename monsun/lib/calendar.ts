@@ -1,4 +1,4 @@
-import { toISODate } from "./date";
+import { fromISODate, shiftISO, toISODate } from "./date";
 import type { WeekStart } from "./settings";
 
 export interface CalendarCell {
@@ -36,4 +36,29 @@ export function buildMonthGrid(year: number, month: number, weekStart: WeekStart
 
 export function formatMonthTitle(year: number, month: number): string {
   return new Date(year, month, 1).toLocaleDateString("en-US", { month: "long", year: "numeric" });
+}
+
+// Hari pertama minggu yang memuat tanggal `iso` (Senin atau Minggu, sesuai Settings).
+export function startOfWeek(iso: string, weekStart: WeekStart): string {
+  const offset = (fromISODate(iso).getDay() - weekStart + 7) % 7;
+  return shiftISO(iso, -offset);
+}
+
+// 7 tanggal berurutan mulai dari `startISO`.
+export function getWeekDays(startISO: string): string[] {
+  return Array.from({ length: 7 }, (_, i) => shiftISO(startISO, i));
+}
+
+// "Oct 19 – 25, 2026" | "Oct 26 – Nov 1, 2026" | "Dec 28, 2026 – Jan 3, 2027"
+export function formatWeekTitle(startISO: string): string {
+  const start = fromISODate(startISO);
+  const end = fromISODate(shiftISO(startISO, 6));
+  const month = (d: Date) => d.toLocaleDateString("en-US", { month: "short" });
+  if (start.getFullYear() !== end.getFullYear()) {
+    return `${month(start)} ${start.getDate()}, ${start.getFullYear()} – ${month(end)} ${end.getDate()}, ${end.getFullYear()}`;
+  }
+  if (start.getMonth() !== end.getMonth()) {
+    return `${month(start)} ${start.getDate()} – ${month(end)} ${end.getDate()}, ${end.getFullYear()}`;
+  }
+  return `${month(start)} ${start.getDate()} – ${end.getDate()}, ${end.getFullYear()}`;
 }
